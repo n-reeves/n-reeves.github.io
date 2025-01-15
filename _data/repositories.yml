@@ -1,14 +1,11 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - n-reeves
 
 repo_description_lines_max: 2
 
 github_repos:
-  - alshedivat/al-folio
-  - jekyll/jekyll
-  - twbs/bootstrap
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - mathjax/MathJax
-  - jpswalsh/academicons
+  - n-reeves/polyddsp-guitar
+  - n-reeves/source-separation
+  - n-reeves/DDSP-dial
+  - n-reeves/audio_fingerprinting
+  - n-reeves/NYC-Taxi-Pattern-Analysis-Using-Spark
