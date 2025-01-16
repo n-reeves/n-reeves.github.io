@@ -5,7 +5,7 @@ permalink: /projects/
 description: A growing collection of your cool projects.
 nav: true
 nav_order: 3
-display_categories: [work, fun]
+display_categories: [Machine Learning] #the format is[cat1, cat2, cat3,]
 horizontal: false
 ---
 
