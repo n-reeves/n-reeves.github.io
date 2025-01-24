@@ -37,29 +37,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/resume/";
           },
-        },{id: "post-deploying-and-integrating-pytorch-models-into-static-websites",
-      
-        title: "Deploying and Integrating Pytorch Models into Static Websites",
-      
-      description: "It&#39;s easier to understand and engage with neural models when you can try them yourself. This post walks through the method used to create the speech enhancement application found in my project portfolio.",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/2025/deploying-models-for-web/";
-        
-      },
-    },{id: "post-neural-speech-enhancement-explained",
-      
-        title: "Neural Speech Enhancement - Explained",
-      
-      description: "Noisy enviroments can make speech more difficult to understand. In this project I explore a novel method for removing background noise and echos for audio files with multiple speakers.",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/2025/speech-enhancement-network/";
-        
-      },
-    },{id: "projects-neural-speech-enhancement",
+        },{id: "projects-neural-speech-enhancement",
           title: 'Neural Speech Enhancement',
           description: "removing background noise and echos from noisy audio files",
           section: "Projects",handler: () => {
