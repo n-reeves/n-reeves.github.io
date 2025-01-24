@@ -5,7 +5,7 @@ description: removing background noise and echos from noisy audio files
 img: assets/img/speech-enhance/input.png
 importance: 1
 category: Machine Learning
-related_publications: true
+related_publications: false
 ---
 
 This page is under development as I configure the infrastructure to securely manage web traffic and enforce computational restrictions. The model is currently deployed on SageMaker using a FastAPI framework. Please check back soon for updates on the full integration of the model into the webpage.
@@ -39,7 +39,8 @@ Here is a preview of the system's capability. There are clear aesthetic issues w
 </div>
 
 
-# File Upload
+
+<!-- # File Upload
 
 Upload a _.mp3, .flac, .wav, .aif_ file below. File length is capped at thirty seconds to help manage cost
 
@@ -51,4 +52,4 @@ Upload a _.mp3, .flac, .wav, .aif_ file below. File length is capped at thirty s
     <audio id="output-audio" controls style="display: none; margin-top: 10px;"></audio>
     <a id="input-download" style="display: none; margin-top: 10px;">Download Resampled Audio</a>
     <a id="output-download" style="display: none; margin-top: 10px;">Download Enhanced Audio</a>
-</div>
+</div> -->
