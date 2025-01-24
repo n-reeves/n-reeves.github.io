@@ -8,7 +8,36 @@ category: Machine Learning
 related_publications: true
 ---
 
-This interactive demo showcases a neural network I designed to enhance multi-speaker audio. The system was trained to remove background noise and reverberation from low-resolution audio files. The network architecture is explained in a separate blog post. Model deployment and its integration into this website are explained in different blog posts.
+This page is under development as I configure the infrastructure to securely manage web traffic and enforce computational restrictions. The model is currently deployed on SageMaker using a FastAPI framework. Please check back soon for updates on the full integration of the model into the webpage.
+
+This interactive demo showcases a neural network I designed to enhance multi-speaker audio. The system was trained to reduce background noise and reverberation in low-resolution audio files. The project demonstrates the complete deep learning development process, including model architecture design, training procedures, pre/post-processing (with custom signal processing algorithms), MLOps infrastructure, and web development.
+
+Due to limited computational resources, the system was trained for only eight hours on five gigabytes of data, focusing on low-fidelity audio. Despite the short training time and small dataset, the network successfully delivers the intended results in a wide range of real-world audio scenarios.
+
+Further details about the audio processing can be found in a [separate blog post](https://n-reeves.github.io/blog/2025/speech-enhancement-network/). The repository for the inference pipeline can be found [here](https://github.com/n-reeves/speech-enhancement-endpoint). The repository that contains the full model architecure is [here](https://github.com/n-reeves/source-separation).
+
+# Example
+
+Here is a preview of the system's capability. There are clear aesthetic issues with the output, however it appears that background noise is being supressed and the speech content is largely preserved.
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <label for="input-audio-example">Input Audio Example</label>
+        {% include audio.liquid path="assets/audio/quiet-speech-loud-drone_in.wav" controls=true %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <label for="output-audio-example">Output Audio Example</label>
+        {% include audio.liquid path="assets/audio/quiet-speech-loud-drone_out.wav" controls=true %}    
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/speech-enhance/speech-enhance-example.png" title="" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+
 
 # File Upload
 
@@ -16,124 +45,10 @@ Upload a _.mp3, .flac, .wav, .aif_ file below. File length is capped at thirty s
 
 <div>
     <input type="file" id="upload" accept=".mp3, .wav, .flac, .aif" />
-    <audio id="audio" controls style="display: none; margin-top: 10px;">
-        <source src="" id="src" />
-    </audio>
+    <button id="enhance">Enhance</button>
     <div id="error" style="color: red; margin-top: 10px;"></div>
+    <audio id="input-audio" controls style="display: none; margin-top: 10px;"></audio>
+    <audio id="output-audio" controls style="display: none; margin-top: 10px;"></audio>
+    <a id="input-download" style="display: none; margin-top: 10px;">Download Resampled Audio</a>
+    <a id="output-download" style="display: none; margin-top: 10px;">Download Enhanced Audio</a>
 </div>
-
-<script>
-    const uploadInput = document.getElementById("upload");
-    const audioElement = document.getElementById("audio");
-    const sourceElement = document.getElementById("src");
-    const errorDiv = document.getElementById("error");
-
-    // Event listener for upload button. Vheck if valid file and assign source
-    uploadInput.addEventListener("change", (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        // Clear previous errors and hide audio element
-        errorDiv.textContent = "";
-        audioElement.style.display = "none";
-
-        // Check file type
-        const allowedTypes = [".mp3", ".wav", ".flac", ".aif"];
-        const fileExtension = file.name.split(".").pop().toLowerCase();
-        if (!allowedTypes.includes(`.${fileExtension}`)) {
-            errorDiv.textContent = "Invalid file type. Please upload an MP3, WAV, FLAC, or AIF file.";
-            return;
-        }
-
-        // Load the file and check duration
-        const objectURL = URL.createObjectURL(file);
-        sourceElement.src = objectURL;
-        audioElement.load();
-
-        audioElement.onloadedmetadata = () => {
-            const duration = audioElement.duration;
-            if (duration > 30) {
-                errorDiv.textContent = "File is too long. Please upload a file less than 30 seconds.";
-                URL.revokeObjectURL(objectURL); // Clean up
-                return;
-            }
-
-            // Show the audio player if everything is valid
-            audioElement.style.display = "block";
-        };
-    });
-</script>
-
-# Enhancment
-Press the 'Enhance' button. 
-
-
-# format ref
-
-Normal text. You can also put regular text between your rows of images, even citations {% cite einstein1950meaning %}. _italics_
-
-    ---
-    Formatted text
-    ---
-
-# multi image formatting 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-
-# Centered Single image
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
-
-
-# Skewed images
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
-
-# Explination
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
-
-# raw code
-{% raw %}
-
-```html
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
-```
-
-{% endraw %}
