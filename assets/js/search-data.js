@@ -37,7 +37,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/resume/";
           },
-        },{id: "projects-neural-speech-enhancement",
+        },{id: "post-neural-speech-enhancement-explained",
+      
+        title: "Neural Speech Enhancement - Explained",
+      
+      description: "Noisy environments can make speech more difficult to understand. In this project I explore a novel method for removing background noise and echos for audio files with multiple speakers.",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/speech-enhancement-network/";
+        
+      },
+    },{id: "projects-neural-speech-enhancement",
           title: 'Neural Speech Enhancement',
           description: "removing background noise and echos from noisy audio files",
           section: "Projects",handler: () => {
