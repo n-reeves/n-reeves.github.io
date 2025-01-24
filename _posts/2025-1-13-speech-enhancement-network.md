@@ -21,6 +21,8 @@ toc:
 ## Introduction
 Speech enhancement aims to improve the audibility and clarity of speech in noisy or reverberant environments. This project explores a neural network-based approach for reducing background noise and echo while enhancing speech quality. The system leverages a Complex U-Net architecture trained to process noisy and reverberant audio, focusing on single-channel, two-speaker scenarios.
 
+The [project page](https://n-reeves.github.io/projects/Neural-Speech-Enhancement/) on this topic contains an interactive demo that allows you to test the model yourself.
+
 _Disclaimer on generative AI use:_ This document was created with the help of ChatGPT, which summarized key content from a more comprehensive paper I wrote. I have verified the accuracy of the information listed here and edited the content where appropriate.
 
 ---
@@ -35,6 +37,29 @@ _Disclaimer on generative AI use:_ This document was created with the help of Ch
 - **Complex Convolutions**: Extensions of convolution operations to the complex domain, enabling models to process both magnitude and phase components.
 
 ---
+
+## Demo
+# Example
+
+Here is a preview of the system's capability. There are clear aesthetic issues with the output, however it appears that background noise is being supressed and the speech content is largely preserved. More details on how this was achieved follow.
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <label for="input-audio-example">Input Audio Example</label>
+        {% include audio.liquid path="assets/audio/quiet-speech-loud-drone_in.wav" controls=true %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <label for="output-audio-example">Output Audio Example</label>
+        {% include audio.liquid path="assets/audio/quiet-speech-loud-drone_out.wav" controls=true %}    
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/speech-enhance/speech-enhance-example.png" title="" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 ## Experiment Design
 ### Objective
