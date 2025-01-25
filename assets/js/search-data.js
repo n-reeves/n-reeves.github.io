@@ -37,9 +37,9 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/resume/";
           },
-        },{id: "post-neural-speech-enhancement-explained",
+        },{id: "post-neural-speech-enhancer-architecture-training-and-post-processing",
       
-        title: "Neural Speech Enhancement - Explained",
+        title: "Neural Speech Enhancer - Architecture, Training, and Post-Processing",
       
       description: "Noisy environments can make speech more difficult to understand. In this project I explore a novel method for removing background noise and echos for audio files with multiple speakers",
       section: "Posts",
@@ -48,31 +48,31 @@ ninja.data = [{
           window.location.href = "/blog/2025/speech-enhancement-network/";
         
       },
-    },{id: "post-randomized-control-trials-for-call-center-support",
-      
-        title: "Randomized Control Trials for Call Center Support",
-      
-      description: "Call center support is a fundamental component of the customer experience in any organization. This article details an approach I use to quantify the impact of new support initiatives on the customer experience before they launch.",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/2023/experiment-design-customer-service/";
-        
-      },
     },{id: "post-experiment-design-strategies-to-engage-quantitative-customers",
       
         title: "Experiment Design Strategies to Engage Quantitative Customers",
       
-      description: "Experiment design can be a great way to find common ground between your sales and marketing teams and the customer. This article covers the value of observational studies in driving growth in a technical customer base.",
+      description: "Good experiments can help your sales and marketing teams find common ground with your customers. This article covers the value of observational studies in driving growth in a technical customer base",
       section: "Posts",
       handler: () => {
         
-          window.location.href = "/blog/2023/experiment-design-for-sales-marketing/";
+          window.location.href = "/blog/2025/experiment-design-for-quantitative-customers/";
+        
+      },
+    },{id: "post-randomized-control-trials-for-call-center-support",
+      
+        title: "Randomized Control Trials for Call Center Support",
+      
+      description: "Call center support is a fundamental component of the customer experience in any organization. This article details an approach I have used to quantify the impact of new support initiatives on the customer experience before they launch",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/experiment-design-customer-service/";
         
       },
     },{id: "projects-applied-experiment-design",
           title: 'Applied Experiment Design',
-          description: "Exploring practical methods for designing and implementing experiments that drive measurable impact in business decision-making",
+          description: "Using science and statistics to solve business problems",
           section: "Projects",handler: () => {
               window.location.href = "/projects/Applied-Experiment-Design/";
             },},{id: "projects-neural-speech-enhancement",
