@@ -2,10 +2,10 @@
 layout: post
 title: Neural Speech Enhancement - Explained
 date: 2025-1-24 01:59:00
-description: Noisy environments can make speech more difficult to understand. In this project I explore a novel method for removing background noise and echos for audio files with multiple speakers.
-tags: speech accessibility
-categories: Machine-Learning Audio-Processing
-thumbnail: assets/img/9.jpg
+description: Noisy environments can make speech more difficult to understand. In this project I explore a novel method for removing background noise and echos for audio files with multiple speakers
+tags: speech accessibility signal-processing
+categories: Machine-Learning Audio-Processing 
+thumbnail: assets/img/speech-enhance/complexconv.png
 images:
   lightbox2: true
   photoswipe: true
@@ -39,7 +39,6 @@ _Disclaimer on generative AI use:_ This document was created with the help of Ch
 ---
 
 ## Demo
-# Example
 
 Here is a preview of the system's capability. There are clear aesthetic issues with the output, however it appears that background noise is being supressed and the speech content is largely preserved. More details on how this was achieved follow.
 
@@ -110,13 +109,7 @@ $$
 
 Where $$f_{\text{pesq}}$$ is the PESQ evaluation function, $$s_{\text{enhanced}}$$ is the enhanced signal, and $$s_{\text{reference}}$$ is the reference signal.
 
-- **Short-Time Objective Intelligibility (STOI)**: Estimates the intelligibility of enhanced speech.
-
-$$
-\text{STOI} = f_{\text{stoi}}(s_{\text{enhanced}}, s_{\text{reference}})
-$$
-
-Where $$f_{\text{stoi}}$$ is the STOI evaluation function, $$s_{\text{enhanced}}$$ is the enhanced signal, and $$s_{\text{reference}}$$ is the reference signal.
+The final network was chosen based on the average difference between the PESQ scores of the network's output compared to the clean, unaugmented input, and the PESQ scores of the noisy reverberant input audio compared to the clean input.
 
 
 ## Architecture
@@ -199,8 +192,10 @@ This scaling factor adjusts the magnitude of $$Y_{ij}$$ to match the desired rel
 
 Finally, to limit the case where the scaling factor leads to unpleasantly large increases in energy, the scaling factor is limited s.t. the magnitude of each coefficient can't surpass the magnitude of the input coefficient.
 
-## Recap
-This project implemented a Complex U-Net architecture to enhance speech clarity in noisy and reverberant conditions. The system leverages advanced signal processing for post-processing to normalize loudness and compensate for the U-Net's bounded outputs. Despite computational and dataset constraints, the model demonstrates effective noise and echo reduction in real-world scenarios.
+## Results and Recap
+Overall, I found that the network improved the average PESQ compared to the noisy examples it was trained on. While the network's performance on real-world data indicates there is room for improvement, the results were promising given the limited data and compute available. It was exciting to see that the network could generalize to some extent.
+
+In the future, I would like to extend the training time, increase the data set, and introduce learnable parameters to the signal processing operations. Since differentiable DSP operations can be integrated directly into neural pipelines, this could further enhance the quality of the output.
 
 ---
 

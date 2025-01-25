@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Neural Speech Enhancement
-description: removing background noise and echos from noisy audio files
+description: Removing background noise and echos from noisy audio files
 img: assets/img/speech-enhance/input.png
 importance: 1
 category: Machine Learning
@@ -18,7 +18,7 @@ Further details about the audio processing can be found in a [separate blog post
 
 # Example
 
-Here is a preview of the system's capability. There are clear aesthetic issues with the output, however it appears that background noise is being supressed and the speech content is largely preserved.
+Here is a preview of the system's capability. There are clear aesthetic issues with the output, however it appears that background noise is being supressed and the speech content is largely preserved. It is unclear whether the system provides any perceptual advantage in output quality during noisy scenarios for individuals with hearing impairments in real-life situations.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
