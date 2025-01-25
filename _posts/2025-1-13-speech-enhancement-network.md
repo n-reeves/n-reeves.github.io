@@ -175,7 +175,7 @@ The key steps are:
    - Apply the inverse STFT (ISTFT) to the normalized audio to generate the final time-domain signal.
 
 More formally, let $$X$$ be the STFT of the input signal, $$Y$$ be the STFT of the output signal. Let
-$$|X|^{\text{norm}}$$ and $$|Y|$$ be the min-max normalized spectrograms of $$X$$ and $$Y$$, respectively.
+$$|X|^{\text{norm}}$$ and $$|Y|^{\text{norm}}$$ be the min-max normalized spectrograms of $$X$$ and $$Y$$, respectively.
 
 The scaling factor $$sf_{ij}$$ for each complex coefficient $$Y_{ij}$$ is defined as:
 
@@ -186,11 +186,11 @@ $$
 \end{cases}
 $$
 
-This scaling factor adjusts the magnitude of $$Y_{ij}$$ to match the desired relationship between the input and output signals. Specifically:
-
-**If** $$\frac{|X_{ij}|^{norm}}{|Y_{ij}|^{norm}} < 1$$: The magnitude of the coefficient $$Y_{ij}$$ was reduced by the neural network relative to the input signal. In this case, we assume the network tried to reduce the contribution of this coefficient to the strength of signal, so we do not apply the scaling factor. If this ratio is greater than or equal to one, the scaling factor is applied to the complex coefficient.
+This scaling factor adjusts the magnitude of $$Y_{ij}$$ to match the desired relationship between the input and output signals. In the first case of the of the piecewise function, we assume the network tried to reduce the contribution of this coefficient to the strength of signal, so we do not apply the scaling factor. If this ratio is greater than or equal to one, the scaling factor is applied to the complex coefficient.
 
 Finally, to limit the case where the scaling factor leads to unpleasantly large increases in energy, the scaling factor is limited s.t. the magnitude of each coefficient can't surpass the magnitude of the input coefficient.
+
+This method assumes that the input coefficients with useful content always have greater magnitudes than the corresponding time-frequency bins in the output signal. In cases where the input signal is extremely faint, the network’s output can become nearly inaudible without the post-processing step. Handling this specific edge case has been left for future work.
 
 ## Results and Recap
 Overall, I found that the network improved the average PESQ compared to the noisy examples it was trained on. While the network's performance on real-world data indicates there is room for improvement, the results were promising given the limited data and compute available. It was exciting to see that the network could generalize to some extent.
