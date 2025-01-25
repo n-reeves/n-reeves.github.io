@@ -12,3 +12,4 @@ This series explores the structure of various experiments I’ve designed and ap
 
 - [Randomized Control Trials for Call Center Support](https://n-reeves.github.io/blog/2025/experiment-design-customer-service/)
 - [Experiment Design Strategies to Engage Quantitative Customers](https://n-reeves.github.io/blog/2025/experiment-design-for-quantitative-customers/)
+- [Observational Studies as a Service (pending)](https://n-reeves.github.io/blog/2025/observational-studies-as-a-service/)
