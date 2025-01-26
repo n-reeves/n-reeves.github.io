@@ -48,9 +48,9 @@ ninja.data = [{
           window.location.href = "/blog/2025/speech-enhancement-network/";
         
       },
-    },{id: "post-experiment-design-strategies-to-engage-quantitative-customers",
+    },{id: "post-experimental-design-strategies-for-engaging-quantitative-customers",
       
-        title: "Experiment Design Strategies to Engage Quantitative Customers",
+        title: "Experimental Design Strategies for Engaging Quantitative Customers",
       
       description: "Good experiments can help your sales and marketing teams find common ground with your customers. This article covers the value of observational studies in driving growth in a technical customer base",
       section: "Posts",
@@ -59,9 +59,9 @@ ninja.data = [{
           window.location.href = "/blog/2025/experiment-design-for-quantitative-customers/";
         
       },
-    },{id: "post-experiment-design-customer-service",
+    },{id: "post-experimental-design-for-call-center-support-strategies",
       
-        title: "Experiment Design Customer Service",
+        title: "Experimental Design for Call Center Support Strategies",
       
       description: "Call center support is a fundamental component of the customer experience in any organization. This article details an approach I have used to quantify the impact of new support initiatives on the customer experience before they launch",
       section: "Posts",
