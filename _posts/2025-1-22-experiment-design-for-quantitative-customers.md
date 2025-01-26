@@ -10,4 +10,6 @@ toc:
   beginning: true
 ---
 
-Write up is in progress
+The write up on this page is in progress. Please check back in a week.
+
+The first version of my article on [experiment design for service tecniques](https://n-reeves.github.io/blog/2025/experiment-design-customer-service/) is live if you would like a reference on my approach to experiment design.
