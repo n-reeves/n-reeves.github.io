@@ -59,9 +59,9 @@ ninja.data = [{
           window.location.href = "/blog/2025/experiment-design-for-quantitative-customers/";
         
       },
-    },{id: "post-randomized-control-trials-for-call-center-support",
+    },{id: "post-experiment-design-customer-service",
       
-        title: "Randomized Control Trials for Call Center Support",
+        title: "Experiment Design Customer Service",
       
       description: "Call center support is a fundamental component of the customer experience in any organization. This article details an approach I have used to quantify the impact of new support initiatives on the customer experience before they launch",
       section: "Posts",
