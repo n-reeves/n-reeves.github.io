@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /repositories/
-title: repositories
+title: Repositories
 description: Quick access to pinned projects. More details on these repos can be found by clicking on the project names.
 nav: true
 nav_order: 4

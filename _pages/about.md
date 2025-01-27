@@ -1,6 +1,6 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
 subtitle: "<strong>mail</strong>: nickwreeves@gmail.com  |  <strong>phone</strong>: (+1)425-449-3230"
 
