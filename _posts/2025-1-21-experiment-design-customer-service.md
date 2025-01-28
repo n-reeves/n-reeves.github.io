@@ -31,7 +31,9 @@ RCTs are the gold standard for causal inference because they minimize bias throu
 This randomness helps account for external factors like time of day, caller mood, or even weather, which might otherwise skew results. For example, callers during peak hours may have different expectations than those during quieter times, making randomization critical for isolating the effect of the new method.
 
 ### Challenges Unique to Call Centers
-Call centers introduce unique challenges, such as variability among agents, geographic diversity of callers, and the difficulty of obtaining consistent feedback. Designing experiments that accommodate these factors—like stratifying samples by geography or time of day—ensures more reliable results.
+Call centers introduce unique challenges, such as variability among agents, geographic diversity of callers, and the difficulty of obtaining consistent feedback. Designing experiments that accommodate these factors—like stratifying samples by geography or time of day—ensures more reliable results. 
+
+Additionally, it can be expensive and time-consuming to train your representatives on a new approach to service. These costs can increase the risk of altering a service strategy without solid evidence to support their value.
 
 ## Measuring Customer Experience
 
@@ -41,11 +43,19 @@ The choice of response variable is critical. Common metrics include customer sat
 - Optional ratings: When responses are voluntary, they often exhibit a bimodal distribution—extremely high or low ratings—making it harder to detect subtle changes in customer sentiment.
 - Ordinal data: Metrics like 1–5 ratings are ordinal, not interval, meaning the difference between a 4 and a 5 may not be equivalent to that between a 2 and a 3.
 
-To mitigate these issues, businesses can:
+To mitigate issues with response rate, businesses can:
 
-- Standardize feedback forms and encourage consistent participation
-- Use binary variables (e.g., "positive" vs. "negative" experiences) for initial analysis
-- Explore models that leverage the ordinal nature of the variable
+- Integrate feedback collection directly into the call with the representative
+- For digital products, work with product teams to integrate the feedback form directly into the product itself.
+
+An important to consider that feedback questions asked directly representatives may result in skewed answers. Many people will feel more uncomfortable giving negative feedback when a human is involved.
+
+To handle missing response variables and the bimodal nature of the data, some solutions are:
+
+- Opt for measures of call resolution rates that don't depend on optional customer feedback.
+- Use binary variables to categorize experiences into positive/not-positive or negative/not-negative.
+
+It's important to note that there are often underlying relationships that influence the presence and absence of responses. It is always possible that highly positive or negative experiences may lead to higher response rates. Additionally, while some may wish to take advantage of the ordinal nature of the data, it's worth reflecting on what each category means and what benefit you hope to gain in inference by adopting these techniques. In practice, I have found it helpful to reduce the problem to measures that identify when customers have positive experiences and when they have negative experiences.
 
 ## Addressing Common Problems
 ### Sampling Strategies
