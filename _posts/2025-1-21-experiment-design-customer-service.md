@@ -15,7 +15,7 @@ In modern customer service, call centers play a critical role in shaping the cus
 
 Randomized Control Trials (RCTs) offer a powerful methodology for evaluating new strategies in call centers. By randomizing treatments and analyzing their outcomes, businesses can identify causality with confidence, even when dealing with complex systems like human behavior and operational variability. Additionally, as agent-based AI systems are increasingly adopted by service organizations, robust frameworks for assessing their performance are essential to guiding development. Effective statistical models can bridge the gap between the machine learning development lifecycle and proxies for the customer experience
 
-_Disclaimer: This article is in progress. Updates may flow in throughout the week
+_Disclaimer:_ This article is in progress. Updates may flow in throughout the week
 
 ## Why Statistics?
 Businesses invest heavily in customer service because it directly impacts retention, reputation, and revenue. Despite this, decision-makers often rely on anecdotal evidence or incomplete data to assess the success of new initiatives. This can lead to ineffective strategies being implemented at scale or valuable ones being overlooked.
@@ -149,11 +149,13 @@ Say the current rate is $$.4$$ Under the assumption that $$p = .4$$, the existin
 Convert the bounds of your confidence intervals to odds based on your existing success rate
 
 Lower Bound: $$40/60 * 3 = 120/60 = 2$$
+
 Upper Bound: $$40/60 * 4 = 160/60 = 2.67$$
 
 Now convert the odds back to probabilities to produce as estimated range for the new rate
 
 Lower bound: $$\frac{2}{1 + 2} = .67$$
+
 Upper Bound: $$\frac{2}{1 + 2.67} = .73$$
 
 To contextualize the confidence interval, remind stakeholders that these values represent the range of plausible outcomes given the data. I like to provide extreme examples to help them understand the downside of working with point estimates alone. 
