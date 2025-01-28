@@ -59,9 +59,26 @@ It's important to note that there are often underlying relationships that influe
 
 ## Addressing Common Problems
 ### Sampling Strategies
-Sampling can introduce bias if not carefully managed. For instance, selecting only a handful of agents to implement a new strategy may result in correlated data due to agent-specific effects. A better approach is stratified random sampling, ensuring all relevant subgroups (e.g., geographic regions or age brackets) are represented.
+Sampling can introduce bias if not carefully managed. When measuring call center performance, I have two primary considerations. First, are our key customer demographics represented fairly in the data we collect? Second, what is the relationship between the skill of individual reps and the customer experience?
 
-### Correlation between Observations
+In an ideal world, we want to adopt service strategies that improve the experience for every possible group. In practice, you may want to prioritize certain groups. Getting equal representation of your customers across geography, age, gender, etc., is difficult without mature service analytics infrastructure. Stratified sampling is a great way to get the desired effect but relies on a link between the calls and user demographic data.
+
+Additionally, the time when users call is also an important consideration and worth stratifying depending on your product. A user that calls in at three in the morning is likely to have a pretty good reason to do so. There may be a relationship between this variable and the customers that need the highest quality of care. Without consideration, it's possible that peak time calls are overrepresented in your experiment, reducing the power of inference.
+
+On the second point, good reps can have a large positive effect on the way your customers feel after calling in and resolution rates. Naturally, a large number of calls and reps can help control for an individual's influence on the way you measure a new strategy. However, this would defeat the purpose of this framework. We want to avoid investing money into training until we have evidence that supports the new strategy. This problem can be addressed through a combination of how we randomly assign treatment and the statistical techniques that we use.
+
+### Assigning Treatment
+To randomly assign a new service technique, start by selecting a subset of service representatives at random. Using stratified sampling can ensure their hours and locations cover the temporal and geographic ranges you wish to control for. Over time, calls handled by these representatives will form the treatment group. To account for ramp-up or training, you may exclude data from the initial days or weeks.
+
+This approach minimizes the training required and reduces the risk of exposing customers to a suboptimal process. Alternatively, representatives could alternate between strategies for each call, limiting the analysis to this group. While this controls for individual differences, there are practical and theoretical drawbacks:
+
+- The method doesn’t leverage the full dataset from your organization.
+- It requires technical infrastructure that may not always be feasible.
+- Alternating strategies could confuse representatives, potentially lowering service quality.
+
+As I'll cover in the next section, an appropriate set of statistical models/tests can help account for the potential correlation between calls accepted by the same rep and the influence of an individual rep's skill level on the response.
+
+## Testing
 In call center experiments, hierarchical models are invaluable for accounting for nested data structures. For example:
 
 - Fixed effects could include time of day or customer demographics.
