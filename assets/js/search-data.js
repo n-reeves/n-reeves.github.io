@@ -37,18 +37,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/resume/";
           },
-        },{id: "post-neural-speech-enhancer-architecture-training-and-post-processing",
-      
-        title: "Neural Speech Enhancer - Architecture, Training, and Post-Processing",
-      
-      description: "Noisy environments can make speech more difficult to understand. In this project I explore a novel method for removing background noise and echos for audio files with multiple speakers",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/2025/speech-enhancement-network/";
-        
-      },
-    },{id: "post-experimental-design-strategies-for-engaging-quantitative-customers",
+        },{id: "post-experimental-design-strategies-for-engaging-quantitative-customers",
       
         title: "Experimental Design Strategies for Engaging Quantitative Customers",
       
@@ -57,6 +46,17 @@ ninja.data = [{
       handler: () => {
         
           window.location.href = "/blog/2025/experiment-design-for-quantitative-customers/";
+        
+      },
+    },{id: "post-neural-speech-enhancer-architecture-training-and-post-processing",
+      
+        title: "Neural Speech Enhancer - Architecture, Training, and Post-Processing",
+      
+      description: "Noisy environments can make speech more difficult to understand. In this project I explore a novel method for removing background noise and echos for audio files with multiple speakers",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/speech-enhancement-network/";
         
       },
     },{id: "post-experimental-design-for-call-center-support-strategies",
