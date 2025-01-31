@@ -65,7 +65,7 @@ In an ideal world, we want to adopt service strategies that improve the experien
 
 Additionally, the time when users call is also an important consideration and worth stratifying depending on your product. A user that calls in at three in the morning is likely to have a pretty good reason to do so. There may be a relationship between this variable and the customers that need the highest quality of care. Without consideration, it's possible that peak time calls are overrepresented in your experiment, reducing the power of inference.
 
-On the second point, good reps can have a large positive effect on the way your customers feel after calling in and resolution rates. Naturally, a large number of calls and reps can help control for an individual's influence on the way you measure a new strategy. However, this would defeat the purpose of this framework. We want to avoid investing money into training until we have evidence that supports the new strategy. This problem can be addressed through a combination of how we randomly assign treatment and the statistical techniques that we use.
+On the second point, good reps can have a large positive effect on the way your customers feel after calling in and resolution rates. Naturally, a large number of calls and reps can help control for an individual's influence on the way you measure a new strategy. However, this would defeat the purpose of this framework. We want to avoid investing money into training a large number of representatives on a new strategy without evidence that supports it's an improvement. This problem can be addressed through a combination of how we randomly assign treatment and the statistical techniques that we use.
 
 ### Assigning Treatment
 To randomly assign a new service technique, start by selecting a subset of service representatives at random. Using stratified sampling can ensure their hours and locations cover the temporal and geographic ranges you wish to control for. Over time, calls handled by these representatives will form the treatment group. To account for ramp-up or training, you may exclude data from the initial days or weeks.
@@ -80,24 +80,24 @@ As I'll cover in the next section, an appropriate set of statistical models/test
 
 ## Testing
 ### Mixed Effects (Hierarchical) Models
+Hierarchical data is prevalent in business settings, and recognizing it is crucial for improving the quality of inference. For example, you might work with user-level data to analyze webpage clicks but have multiple observations for each customer. In clinical settings, you may focus on patient outcomes while accounting for the hospital. Other examples include test scores grouped by students or shipping speed influenced by warehouses. Such cases can create challenges for standard regression analysis and hypothesis testing, as including all data risks introducing correlation between observations.
+
 Mixed effects models, also known as hierarchical or multilevel models, combine fixed and random effects to analyze data with a naturally grouped structure (e.g., customer data grouped by region or product). They help model relationships more accurately when there are varying influences across subgroups within a larger population.
 
 - Fixed effects are coefficients you want to estimate and interpret directly, representing the average relationship across all data.
 - Random effects capture subgroup-level variability and account for differences between groups, using partial pooling to balance the influence of smaller and larger groups.
 
-Hierarchical data is extremely common in many business applications and occurs often once you know how to recognize it. You may be interested in webpage clicks, but you have multiple observations for each customer. You are interested in patient outcomes, but you want to control for the hospital. Test scores and students, warehouses and ship speed, the list goes on.
-
-This article doesn't serve as a full explanation of the theory behind these models. If you would like a great resource, [Beyond Multiple Linear Regression](https://bookdown.org/roback/bookdown-BeyondMLR/) by Roback and Legler is a great resource if you would like more background. At it's core, its important to know the following:
+This article doesn't serve as a full explanation of the theory behind these models. If you would like a great resource, [Beyond Multiple Linear Regression](https://bookdown.org/roback/bookdown-BeyondMLR/) by Roback and Legler is a great textbook that provides practical advice on multi-level modeling in R. As a high-level reference, it's important to know the following:
 
 - Generalized linear models assume that observations are independent of one another.
-- Hierarchical data violates this assumption because observations within the same group may be correlated (e.g., customers from the same region or students in the same classroom).
-- You may have many groups or the size of your groups may vary significantly. In either case, this could result in issues when applying standard encoding methods for categorical variables.
-- Mixed effects models address these issues by treating group-level effects (coefficients) as random variables. This approach allows the model to learn from all groups collectively, applying partial pooling to shrink group estimates toward the overall population mean.
+- Hierarchical data risks violating this assumption.
+- You may have many groups, or the size of your groups may vary significantly. In either case, this could result in issues when applying standard encoding methods for categorical variables.
+- Mixed effects models address these issues by treating group-level effects as random variables. This approach allows the model to learn from all groups collectively, applying partial pooling to shrink group estimates toward the overall population mean.
 
 The result is a robust inferential tecnique that allows you to:
 
-- Measure the relationship between your predictors (e.g., treatments) and a response variable while accounting for correlations within groups.
-- Quantify how much variability in the response can be attributed to differences between groups, offering insight into the influence of group-level factors.
+- Measure the relationship between your predictors (e.g., treatments) and a response variable while accounting for correlation within groups.
+- Quantify how much variability in the response can be attributed to differences between groups, offering insight into the influence of group-level factors on the aggregate response. (How much of the total variance in customer feedback is explained by an individual rep's skill?)
 
 ### Mixed Effects Models within the Framework
 Mixed effects models are well suited to this experimental framework, as they enable the analysis of hierarchical data while addressing the variability inherent in call center environments. These models combine fixed effects, which capture the treatment impact of a new service strategy, with random effects that account for differences among individual customer service representatives.
@@ -119,40 +119,44 @@ In regression analysis for inference, it is common to start by building a model 
 
 Call level (level one):
 
-$$
+\begin{equation}
 Y_{ij} ​= a_{i} + b_{i}B_{ij} + c_{i}C_{ij} + \epsilon_{ij}
-$$
+\end{equation}
 
 Here, $$a_{i}$$ represents the representative-specific intercept, $$b_{i}$$ represents the representative-specific effect of working with older callers, and $$c_{i}$$ represents the representative-specific effect of taking nighttime calls. $$\epsilon_{ij}$$ is the randomly distributed error associated with the observation. 
 
 Rep level (level two): 
 
-$$
+\begin{equation}
 a_{i} = \alpha_{0} + \alpha_{1}T_{i} + u_{i}
-b_{i} = \beta_{0} + \beta_{1}T_{i} + v_{i}
+\end{equation}
+\begin{equation}
+b_{i} = \beta_{0} + \beta_{1}T_{i} + v_{i} 
+\end{equation}
+\begin{equation}
 c_{i} = \gamma_{0} + \gamma_{1}T_{i} + w_{i}
-$$
+\end{equation}
 
-The representative-level variables are defined based on the interaction terms with the treatment variable that we include in our model. The key idea is that $$u_{i}, v_{i}, w_{i}$$ are random effects intended to capture between rep variability in the intercepts and slopes. The coefficients $$\alpha, \beta,\gamma$$ are all fixed effects. If the new strategy has a positive relationship with the response, we would expect this to be reflected in the values and significance of $$\alpha_{1}, \beta_{1}, \gamma_{1}$$.
+The representative-level variables are defined based on the interaction terms with the treatment variable that we include in our model. The key idea is that $$u_{i}, v_{i}, w_{i}$$ are random effects intended to capture  between-rep variability in the intercepts and slopes. The coefficients $$\alpha, \beta,\gamma$$ are all fixed effects. If the new strategy has a positive relationship with the response, we would expect this to be reflected in the values and significance of $$\alpha_{1}, \beta_{1}, \gamma_{1}$$.
 
 ## Communication and Pragmitism in Applied Statistics
 When working with business leaders, simply stating the p-value, confidence interval, and point estimate associated with the coefficient of your treatment is not enough. Extending these estimations to provide a range of expected ROI or other actionable metrics in the context of the response variable is critical. Additionally, incorporating the cost of implementing the program can make the decision easier and facilitate a more productive discussion.
 
 To adjust and simplify our case study, suppose we adopted a simpler model that dropped all interaction terms with the treatment, leaving only a fixed effect associated with it. Assume our response variable is binary, indicating whether the caller gave a 4+ star rating.
 
-Suppose the estimated coefficient for the treatment is 1.25 with a 95% confidence interval of [1.1, 1.4]. Thus, the new strategy leads to an increase in the log odds by 1.25. But what does this mean? We can eponentiate the bounds of the confidence interval to instead produce the estimates in terms of the odds (the ratio of the probability of success to the probability of failutre). The result is confidence interval that spans [~3, ~4], but again, how can this be used to help business decisions?
+Suppose the estimated coefficient for the treatment is $$1.25$$ with a $$95%$$ confidence interval of $$[1.1, 1.4]$$. Thus, the new strategy leads to an increase in the log odds by $$1.25$$. But what does this mean? We can exponentiate the bounds of the confidence interval to instead produce the estimates in terms of the odds (the ratio of the probability of success to the probability of failure). The result is a confidence interval that spans $$[~3, ~4]$$, but again, how can this be used to help business decisions?
 
-One straightforward method is to tie the results of inference back to the KPI that motivated your choice in response. For example, an org might use the percentage of calls with a certain rating as a health check. Look at the current rate of positive ratings under the existing strategy to contextualize what a three to four times increase in the probability of recieving a positive rating would look like.
+One straightforward method is to tie the results of inference back to the KPI that motivated your choice in response. For example, an org might use the percentage of calls with a certain rating as a health check. Look at the current rate of positive ratings under the existing strategy to contextualize what a three to four times increase in the probability of receiving a positive rating would look like.
 
 Say the current rate is $$.4$$ Under the assumption that $$p = .4$$, the existing odds would be $$\frac{.4}{.6} = \frac{40}{60}$$
 
-Convert the bounds of your confidence intervals to odds based on your existing success rate
+Convert the bounds of your confidence intervals to odds based on your existing success rate:
 
 Lower Bound: $$40/60 * 3 = 120/60 = 2$$
 
 Upper Bound: $$40/60 * 4 = 160/60 = 2.67$$
 
-Now convert the odds back to probabilities to produce as estimated range for the new rate
+Now convert the odds back to probabilities to produce an estimated range for the new rate:
 
 Lower bound: $$\frac{2}{1 + 2} = .67$$
 
@@ -160,10 +164,10 @@ Upper Bound: $$\frac{2}{1 + 2.67} = .73$$
 
 To contextualize the confidence interval, remind stakeholders that these values represent the range of plausible outcomes given the data. I like to provide extreme examples to help them understand the downside of working with point estimates alone. 
 
-- If customers assigned to trained reps were unusually cheerful by chance, the results might overestimate the true effect
+- If customers assigned to trained reps were unusually cheerful by chance, the results might overestimate the true effect.
 - Conversely, if treated reps happened to get more difficult customers, the results might underestimate the effect.
 
-The confidence interval is just a means to quantify this effect. If we were to repeat this experiment 100 times with random sets of customers and random reps each time, we would expect that in 95% of these trials this range would include the true value added by the new strategy. If this explanation is too heady for your partners, you can start by explaining there is a 95% chance that the value offered by the new strategy will fall between the range that you calculated.
+The confidence interval is just a means to quantify this effect. If we were to repeat this experiment 100 times with random sets of customers and random reps each time, we would expect that in $$95%$$ of these trials this range would include the true value added by the new strategy. If this explanation is too heady for your partners, you can start by explaining there is a $$95%$$ chance that the value offered by the new strategy will fall between the range that you calculated.
 
 ## Future Directions: AI, LLMS, and the Future of Service
 As AI tools like large language models (LLMs) become integral to customer service, the role of statistics becomes even more critical. A/B testing AI-driven methods—such as comparing chatbot versions or evaluating hybrid human-AI workflows—requires robust frameworks to measure their impact on customer experience.
