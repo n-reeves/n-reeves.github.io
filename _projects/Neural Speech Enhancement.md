@@ -8,37 +8,11 @@ category: Machine Learning
 related_publications: false
 ---
 
-This page is under development as I configure the infrastructure to securely manage web traffic and enforce computational restrictions. The model is currently deployed on SageMaker using a FastAPI framework. Please check back soon for updates on the full integration of the model into the webpage.
-
 This interactive demo showcases a neural network I designed to enhance multi-speaker audio. The system was trained to reduce background noise and reverberation in low-resolution audio files. The project demonstrates the complete deep learning development process, including model architecture design, training procedures, pre/post-processing (with custom signal processing algorithms), MLOps infrastructure, and web development.
 
 Due to limited computational resources, the system was trained for only eight hours on five gigabytes of data, focusing on low-fidelity audio. Despite the short training time and small dataset, the network successfully delivers the intended results in a wide range of real-world audio scenarios.
 
 Further details about the audio processing can be found in a [separate blog post](https://n-reeves.github.io/blog/2025/speech-enhancement-network/). The repository for the inference pipeline can be found [here](https://github.com/n-reeves/speech-enhancement-endpoint). The repository that contains the full model architecure is [here](https://github.com/n-reeves/source-separation).
-
-# Example
-
-Here is a preview of the system's capability. There are clear aesthetic issues with the output, however it appears that background noise is being supressed and the speech content is largely preserved. It is unclear whether the system provides any perceptual advantage in output quality during noisy scenarios for individuals with hearing impairments in real-life situations.
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <label for="input-audio-example">Input Audio Example</label>
-        {% include audio.liquid path="assets/audio/quiet-speech-loud-drone_in.wav" controls=true %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        <label for="output-audio-example">Output Audio Example</label>
-        {% include audio.liquid path="assets/audio/quiet-speech-loud-drone_out.wav" controls=true %}    
-    </div>
-</div>
-
-
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/speech-enhance/speech-enhance-example.png" title="" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-
-
 
 # File Upload
 
@@ -46,12 +20,9 @@ Upload a _.mp3, .flac, .wav_ file below. File length is capped at thirty seconds
 
 <div>
     <input type="file" id="upload" accept=".mp3, .wav, .flac" />
-    <button id="enhance">Enhance</button>
     <div id="error" style="color: red; margin-top: 10px;"></div>
     <audio id="input-audio" controls style="display: none; margin-top: 10px;"></audio>
-    <audio id="output-audio" controls style="display: none; margin-top: 10px;"></audio>
     <a id="input-download" style="display: none; margin-top: 10px;">Download Resampled Audio</a>
-    <a id="output-download" style="display: none; margin-top: 10px;">Download Enhanced Audio</a>
 </div>
 
 <script>
@@ -60,8 +31,8 @@ document.getElementById('upload').addEventListener('change', function (event) {
     const file = event.target.files[0];
     const errorElement = document.getElementById('error');
     const inputAudioPlayer = document.getElementById('input-audio');
-
     const outputAudioPlayer = document.getElementById('output-audio');
+    const enhanceButton = document.getElementById('enhance-button');
 
     if (!file) return;
 
@@ -73,6 +44,7 @@ document.getElementById('upload').addEventListener('change', function (event) {
         URL.revokeObjectURL(inputAudioPlayer.src);
         inputAudioPlayer.src = ''; // Clear previous src
         inputAudioPlayer.style.display = 'none';
+        enhanceButton.disabled = true;
     }
     
     tempAudio.addEventListener('loadedmetadata', async function () {
@@ -80,7 +52,7 @@ document.getElementById('upload').addEventListener('change', function (event) {
         const duration = tempAudio.duration;
 
         if (duration > 30.5) {
-            errorElement.textContent = `File length too long. Uploaded file is ${duration} seconds.`;
+            errorElement.textContent = `Error: File length is longer than 30 seconds. Uploaded file is ${duration} seconds.`;
             URL.revokeObjectURL(audioObjectUrl);
         } else {
             try {
@@ -90,11 +62,17 @@ document.getElementById('upload').addEventListener('change', function (event) {
                 inputAudioPlayer.src = resampledAudioURL;
                 inputAudioPlayer.style.display = 'block';
 
+                enhanceButton.disabled = false;
+                //enhanceButton.value = 'asdaisodhjoaijsd';
+
+                //errorElement.textContent = `${enhanceButton.disabled}`;
+                errorElement.textContent = '';
+
             } catch (err) {
                 errorElement.textContent = `Error processing the audio file. ${err}`;
                 console.error(err);
             }
-        }       
+        }   
     });
 });
 
@@ -127,7 +105,6 @@ async function resampleAudio(file) {
     // Encode the resampled buffer to a WAV file
     const wavBlob = encodeWAV(resampledBuffer);
     return URL.createObjectURL(wavBlob);
-
 }
 
 function encodeWAV(audioBuffer) {
@@ -171,5 +148,101 @@ function writeString(view, offset, string) {
         view.setUint8(offset + i, string.charCodeAt(i));
     }
 }
-
 </script>
+
+# Enhance
+
+Click the enhance button to process the audio.
+
+<div>
+    <input id="enhance-button" type="button" value="Enhance" disabled/>
+    <div id="error-enhance" style="color: red; margin-top: 10px;"></div>
+    <audio id="output-audio" controls style="display: none; margin-top: 10px;"></audio>
+    <a id="output-download" style="display: none; margin-top: 10px;">Download Enhanced Audio</a>
+</div>
+
+<script>
+document.getElementById('enhance-button').addEventListener('click', async function (event) {
+    const inputAudioPlayer = document.getElementById('input-audio');
+    const errorElementEnhance = document.getElementById('error-enhance');
+
+    errorElementEnhance.textContent = '';
+
+    if (!inputAudioPlayer.src) {
+        console.error('No audio source found.');
+        return;
+    }
+
+    try {
+        const audioBuffer = await fetchAudioBuffer(inputAudioPlayer.src);
+        const audioData = bufferToListOfLists(audioBuffer);
+        
+        const response = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ audio: audioData })
+        });
+
+        const jsonResponse = await response.json();
+        if (jsonResponse.error) {
+            console.error("API Error:", jsonResponse.error);
+        } else {
+            playEnhancedAudio(jsonResponse.output_audio);
+        }
+    } catch (err) {
+        console.error("Enhance request failed:", err);
+    }
+});
+
+async function fetchAudioBuffer(audioUrl) {
+    const response = await fetch(audioUrl);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioContext = new AudioContext();
+    return await audioContext.decodeAudioData(arrayBuffer);
+}
+
+function bufferToListOfLists(audioBuffer) {
+    const numberOfChannels = audioBuffer.numberOfChannels;
+    const length = audioBuffer.length;
+    let audioData = [];
+
+    for (let ch = 0; ch < numberOfChannels; ch++) {
+        let channelData = audioBuffer.getChannelData(ch);
+        audioData.push(Array.from(channelData)); // Convert Float32Array to a regular array
+    }
+    
+    return audioData;
+}
+
+function playEnhancedAudio(audioArray) {
+    const audioBuffer = new Float32Array(audioArray.flat()); // Flatten and convert back to Float32Array
+    const wavBlob = encodeWAV(audioBuffer); // Use existing encodeWAV function
+    const outputAudioPlayer = document.getElementById('output-audio');
+
+    outputAudioPlayer.src = URL.createObjectURL(wavBlob);
+    outputAudioPlayer.style.display = 'block';
+}
+</script>
+
+
+# Example
+
+Here is a preview of the system's capability. There are clear aesthetic issues with the output, however it appears that background noise is being supressed and the speech content is largely preserved. It is unclear whether the system provides any perceptual advantage in output quality during noisy scenarios for individuals with hearing impairments in real-life situations.
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <label for="input-audio-example">Input Audio Example</label>
+        {% include audio.liquid path="assets/audio/quiet-speech-loud-drone_in.wav" controls=true %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <label for="output-audio-example">Output Audio Example</label>
+        {% include audio.liquid path="assets/audio/quiet-speech-loud-drone_out.wav" controls=true %}    
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/speech-enhance/speech-enhance-example.png" title="" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
