@@ -149,7 +149,6 @@ function writeString(view, offset, string) {
     }
 }
 </script>
-
 # Enhance
 
 Click the enhance button to process the audio.
@@ -157,71 +156,37 @@ Click the enhance button to process the audio.
 <div>
     <input id="enhance-button" type="button" value="Enhance" disabled/>
     <div id="error-enhance" style="color: red; margin-top: 10px;"></div>
+    <div id="error-enhance2" style="color: red; margin-top: 10px;"></div>
     <audio id="output-audio" controls style="display: none; margin-top: 10px;"></audio>
     <a id="output-download" style="display: none; margin-top: 10px;">Download Enhanced Audio</a>
 </div>
 
 <script>
-document.getElementById('enhance-button').addEventListener('click', async function (event) {
+document.getElementById('enhance-button').addEventListener('click', async function () {
     const inputAudioPlayer = document.getElementById('input-audio');
     const errorElementEnhance = document.getElementById('error-enhance');
+    const errorElementEnhance2 = document.getElementById('error-enhance2');
 
-    errorElementEnhance.textContent = '';
+    errorElementEnhance.textContent = "Enhance button clicked!"; // Debugging message
 
-    if (!inputAudioPlayer.src) {
-        console.error('No audio source found.');
+    if (!inputAudioPlayer.src) { 
+        errorElementEnhance.textContent = "No audio source found!";
         return;
     }
 
     try {
-        const audioBuffer = await fetchAudioBuffer(inputAudioPlayer.src);
-        const audioData = bufferToListOfLists(audioBuffer);
-        
-        const response = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ audio: audioData })
-        });
+        const response = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping");
+        // const jsonResponse = await response.json();
 
-        const jsonResponse = await response.json();
-        if (jsonResponse.error) {
-            console.error("API Error:", jsonResponse.error);
-        } else {
-            playEnhancedAudio(jsonResponse.output_audio);
-        }
+        // if (jsonResponse.error) {
+        //     errorElementEnhance.textContent = `API Error: ${jsonResponse.error}`;
+        // } else {
+        //     errorElementEnhance.textContent = `Enhancement successful: ${jsonResponse.message}`;
+        // }
     } catch (err) {
-        console.error("Enhance request failed:", err);
+        errorElementEnhance2.textContent = `Enhance request failed: ${err.message || err}`;
     }
 });
-
-async function fetchAudioBuffer(audioUrl) {
-    const response = await fetch(audioUrl);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioContext = new AudioContext();
-    return await audioContext.decodeAudioData(arrayBuffer);
-}
-
-function bufferToListOfLists(audioBuffer) {
-    const numberOfChannels = audioBuffer.numberOfChannels;
-    const length = audioBuffer.length;
-    let audioData = [];
-
-    for (let ch = 0; ch < numberOfChannels; ch++) {
-        let channelData = audioBuffer.getChannelData(ch);
-        audioData.push(Array.from(channelData)); // Convert Float32Array to a regular array
-    }
-    
-    return audioData;
-}
-
-function playEnhancedAudio(audioArray) {
-    const audioBuffer = new Float32Array(audioArray.flat()); // Flatten and convert back to Float32Array
-    const wavBlob = encodeWAV(audioBuffer); // Use existing encodeWAV function
-    const outputAudioPlayer = document.getElementById('output-audio');
-
-    outputAudioPlayer.src = URL.createObjectURL(wavBlob);
-    outputAudioPlayer.style.display = 'block';
-}
 </script>
 
 
