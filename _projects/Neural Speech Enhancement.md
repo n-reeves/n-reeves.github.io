@@ -156,7 +156,6 @@ Click the enhance button to process the audio.
 <div>
     <input id="enhance-button" type="button" value="Enhance" disabled/>
     <div id="error-enhance" style="color: red; margin-top: 10px;"></div>
-    <div id="error-enhance2" style="color: red; margin-top: 10px;"></div>
     <audio id="output-audio" controls style="display: none; margin-top: 10px;"></audio>
     <a id="output-download" style="display: none; margin-top: 10px;">Download Enhanced Audio</a>
 </div>
@@ -165,7 +164,6 @@ Click the enhance button to process the audio.
 document.getElementById('enhance-button').addEventListener('click', async function () {
     const inputAudioPlayer = document.getElementById('input-audio');
     const errorElementEnhance = document.getElementById('error-enhance');
-    const errorElementEnhance2 = document.getElementById('error-enhance2');
 
     errorElementEnhance.textContent = "Enhance button clicked!"; // Debugging message
 
@@ -175,16 +173,19 @@ document.getElementById('enhance-button').addEventListener('click', async functi
     }
 
     try {
-        const response = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping");
-        // const jsonResponse = await response.json();
+        //check if api is up
+        const testResponse = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping");
+        //const testResponse = await fetch("http://127.0.0.1:8000/ping");
+        const testJsonResponse = await testResponse.json();
 
-        // if (jsonResponse.error) {
-        //     errorElementEnhance.textContent = `API Error: ${jsonResponse.error}`;
-        // } else {
-        //     errorElementEnhance.textContent = `Enhancement successful: ${jsonResponse.message}`;
-        // }
+        if (testJsonResponse.error) {
+            errorElementEnhance.textContent = `Error: ${testJsonResponse.error}`;
+        } else {
+            //if api is up, invocations
+            errorElementEnhance.textContent = `Enhancement successful: ${testJsonResponse.message}`;
+        }
     } catch (err) {
-        errorElementEnhance2.textContent = `Enhance request failed: ${err.message || err}`;
+        errorElementEnhance.textContent = `Process Failed: ${err.message || err}`;
     }
 });
 </script>
