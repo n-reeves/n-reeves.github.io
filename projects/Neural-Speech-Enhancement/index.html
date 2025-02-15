@@ -137,8 +137,12 @@ document.getElementById('enhance-button').addEventListener('click', async functi
 
     try {
         //check if api is up
-        const testResponse = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping");
-        //const testResponse = await fetch("http://127.0.0.1:8000/ping");
+        const testResponse = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping", {
+                                                method: "GET",
+                                                headers: {
+                                                    "Ngrok-Skip-Browser-Warning": "true" // Bypass ngrok interstitial
+                                                }
+                                                });
         const testJsonResponse = await testResponse.json();
 
         if (testJsonResponse.error) {
