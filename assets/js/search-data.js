@@ -37,7 +37,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/resume/";
           },
-        },{id: "post-experimental-design-strategies-for-engaging-quantitative-customers",
+        },{id: "post-deploying-and-integrating-pytorch-models-into-static-websites",
+      
+        title: "Deploying and Integrating Pytorch Models into Static Websites",
+      
+      description: "It&#39;s easier to understand and engage with neural models when you can try them yourself. This post walks through the method used to create the speech enhancement application found in my project portfolio.",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/deploying-models-for-web/";
+        
+      },
+    },{id: "post-observational-studies-as-a-service",
+      
+        title: "Observational Studies as a Service",
+      
+      description: "Advanced analytics teams are transforming how businesses operate. This post explores how automating statistical testing and modeling can improve B2B relationship building and drive sales",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/observational-studies-as-a-service/";
+        
+      },
+    },{id: "post-experimental-design-strategies-for-engaging-quantitative-customers",
       
         title: "Experimental Design Strategies for Engaging Quantitative Customers",
       
