@@ -24,8 +24,22 @@ Upload a _.mp3, .flac, .wav_ file below. File length is capped at thirty seconds
     <audio id="input-audio" controls style="display: none; margin-top: 10px;"></audio>
     <a id="input-download" style="display: none; margin-top: 10px;">Download Resampled Audio</a>
 </div>
+# Enhance
+
+Click the enhance button to process the audio.
+
+<div>
+    <input id="enhance-button" type="button" value="Enhance" disabled/>
+    <div id="error-enhance" style="color: red; margin-top: 10px;"></div>
+    <audio id="output-audio" controls style="display: none; margin-top: 10px;"></audio>
+    <a id="output-download" style="display: none; margin-top: 10px;">Download Enhanced Audio</a>
+</div>
 
 <script>
+    
+let audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // Define at top scope
+let storedAudioBuffer = null; // Store the decoded audio buffer
+
 //event listener for upload button
 document.getElementById('upload').addEventListener('change', function (event) {
     const file = event.target.files[0];
@@ -63,9 +77,6 @@ document.getElementById('upload').addEventListener('change', function (event) {
                 inputAudioPlayer.style.display = 'block';
 
                 enhanceButton.disabled = false;
-                //enhanceButton.value = 'asdaisodhjoaijsd';
-
-                //errorElement.textContent = `${enhanceButton.disabled}`;
                 errorElement.textContent = '';
 
             } catch (err) {
@@ -101,6 +112,8 @@ async function resampleAudio(file) {
     source.start();
 
     const resampledBuffer = await offlineContext.startRendering();
+
+    storedAudioBuffer = resampledBuffer;
 
     // Encode the resampled buffer to a WAV file
     const wavBlob = encodeWAV(resampledBuffer);
@@ -148,24 +161,11 @@ function writeString(view, offset, string) {
         view.setUint8(offset + i, string.charCodeAt(i));
     }
 }
-</script>
-# Enhance
 
-Click the enhance button to process the audio.
-
-<div>
-    <input id="enhance-button" type="button" value="Enhance" disabled/>
-    <div id="error-enhance" style="color: red; margin-top: 10px;"></div>
-    <audio id="output-audio" controls style="display: none; margin-top: 10px;"></audio>
-    <a id="output-download" style="display: none; margin-top: 10px;">Download Enhanced Audio</a>
-</div>
-
-<script>
 document.getElementById('enhance-button').addEventListener('click', async function () {
     const inputAudioPlayer = document.getElementById('input-audio');
+    const outputAudioPlayer = document.getElementById('output-audio');
     const errorElementEnhance = document.getElementById('error-enhance');
-
-    errorElementEnhance.textContent = "Enhance button clicked!"; // Debugging message
 
     if (!inputAudioPlayer.src) { 
         errorElementEnhance.textContent = "No audio source found!";
@@ -174,24 +174,66 @@ document.getElementById('enhance-button').addEventListener('click', async functi
 
     try {
         //check if api is up
-        const testResponse = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping", {
+        let testResponse = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/ping", {
                                                 method: "GET",
                                                 headers: {
-                                                    "Ngrok-Skip-Browser-Warning": "true" // Bypass ngrok interstitial
+                                                    "Ngrok-Skip-Browser-Warning": "true"
                                                 }
                                                 });
-        const testJsonResponse = await testResponse.json();
+        let testJsonResponse = await testResponse.json();
 
         if (testJsonResponse.error) {
-            errorElementEnhance.textContent = `Error: ${testJsonResponse.error}`;
+            errorElementEnhance.textContent = `Error: Network Communication Failed`;
         } else {
             //if api is up, invocations
-            errorElementEnhance.textContent = `Enhancement successful: ${testJsonResponse.message}`;
+            errorElementEnhance.textContent = `Network Communication Succesful: Please wait while the file is processed`;
+
+            let listOfLists = await audioBufferToLists(storedAudioBuffer);
+            let responseOutput = await fetch("https://humble-wrongly-bluebird.ngrok-free.app/invocations", {
+                                                                method: "POST",
+                                                                headers: {"Ngrok-Skip-Browser-Warning": "true",
+                                                                    "Content-Type": "application/json"},
+                                                                body: JSON.stringify({ audio: listOfLists })});
+
+            let responseOutputJson = await responseOutput.json();
+            let outputAudioRaw = responseOutputJson.output_audio;
+            let outputAudioRawTyped = new Float32Array(outputAudioRaw[0]);
+
+            //to do: convert array buffer to audio buffer to wavblob to url
+            let outputAudioBuffer = new AudioBuffer({
+                                                    length: outputAudioRawTyped.length,
+                                                    numberOfChannels: 1,
+                                                    sampleRate: 8000 });
+            outputAudioBuffer.copyToChannel(outputAudioRawTyped, 0);
+            let outputWavBlob = encodeWAV(outputAudioBuffer);
+            let outputURL = URL.createObjectURL(outputWavBlob);
+
+            //display audio
+            outputAudioPlayer.src = outputURL;
+            outputAudioPlayer.style.display = 'block';
+            
+            //debug content
+            //let outputAudioArrayBuffer = outputAudioRawTyped.buffer;
+            let keys = Object.keys(responseOutputJson);
+            let jsonString = JSON.stringify(responseOutputJson, null, 2);
+            errorElementEnhance.textContent = ``;
         }
     } catch (err) {
         errorElementEnhance.textContent = `Process Failed: ${err.message || err}`;
     }
 });
+
+async function audioBufferToLists(audioBuffer) {
+    let numChannels = audioBuffer.numberOfChannels;
+    let sampleLists = [];
+
+    for (let i = 0; i < numChannels; i++) {
+        let channelData = audioBuffer.getChannelData(i); // Float32Array
+        sampleLists.push(Array.from(channelData)); // Convert to normal list
+    }
+
+    return sampleLists; // Returns list of lists
+}
 </script>
 
 
